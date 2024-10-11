@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: assignment2
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: yerdana2001
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./myproject:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DB_NAME: assignment2
+      DB_USER: myuser
+      DB_PASSWORD: yerdana2001
+      DB_HOST: db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
